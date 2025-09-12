@@ -31,18 +31,37 @@ class SystemdInit(InitSystem):
         return 'unknown'
 
     def load_all_services(self):
-        svcs = shell_out(self.list_cmd, chroot=self.chroot).splitlines()[1:]
-        for line in svcs:
-            try:
-                name = line.split('.service')[0]
-                config = line.split()[1]
-                self.services[name] = {
-                    'name': name,
-                    'config': config
-                }
-            except IndexError:
-                # not a valid line to extract status info from
-                pass
+
+        try:
+            with open("/etc/sos/.cache/load_all_services.txt",
+                      'r', encoding='utf-8') as fp:
+                for line in fp:
+                    try:
+                        name = line.split('.service')[0]
+                        config = line.split()[1]
+                        self.services[name] = {
+                            'name': name,
+                            'config': config
+                        }
+                    except IndexError:
+                        # not a valid line to extract status info from
+                        pass
+        except FileNotFoundError:
+            svcs = shell_out(self.list_cmd, chroot=self.chroot).splitlines()[1:]
+            for line in svcs:
+                try:
+                    name = line.split('.service')[0]
+                    config = line.split()[1]
+                    self.services[name] = {
+                        'name': name,
+                        'config': config
+                    }
+                except IndexError:
+                    # not a valid line to extract status info from
+                    pass
+            with open("/etc/sos/.cache/load_all_services.txt",
+                      'w', encoding='utf-8') as file:
+                file.write(svcs)
 
     def is_running(self, name, default=False):
         try:
