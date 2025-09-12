@@ -11,6 +11,7 @@
 from sos.policies.init_systems import InitSystem
 from sos.utilities import shell_out
 
+from pathlib import Path
 
 class SystemdInit(InitSystem):
     """InitSystem abstraction for SystemD systems"""
@@ -31,9 +32,9 @@ class SystemdInit(InitSystem):
         return 'unknown'
 
     def load_all_services(self):
-
         try:
-            with open("/etc/sos/.cache/load_all_services.txt",
+            list_cmd_file = Path("/etc/sos/.cache/load_all_services.txt")
+            with open(list_cmd_file,
                       'r', encoding='utf-8') as fp:
                 for line in fp:
                     try:
@@ -59,7 +60,8 @@ class SystemdInit(InitSystem):
                 except IndexError:
                     # not a valid line to extract status info from
                     pass
-            with open("/etc/sos/.cache/load_all_services.txt",
+            list_cmd_file.parent.mkdir(exist_ok=True, parents=True)
+            with open(list_cmd_file,
                       'w', encoding='utf-8') as file:
                 file.write(svcs)
 
