@@ -13,6 +13,7 @@ from sos.utilities import shell_out
 
 from pathlib import Path
 
+
 class SystemdInit(InitSystem):
     """InitSystem abstraction for SystemD systems"""
 
@@ -48,7 +49,8 @@ class SystemdInit(InitSystem):
                         # not a valid line to extract status info from
                         pass
         except FileNotFoundError:
-            svcs = shell_out(self.list_cmd, chroot=self.chroot).splitlines()[1:]
+            svcs = shell_out(self.list_cmd,
+                             chroot=self.chroot).splitlines()[1:]
             for line in svcs:
                 try:
                     name = line.split('.service')[0]
