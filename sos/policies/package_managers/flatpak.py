@@ -20,6 +20,7 @@ class FlatpakPackageManager(PackageManager):
     files_command = ''
     verify_command = ''
     verify_filter = ''
+    query_cache_file = ''
 
     def _parse_pkg_list(self, pkg_list):
         for line in pkg_list.splitlines():
