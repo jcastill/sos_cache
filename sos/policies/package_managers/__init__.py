@@ -10,6 +10,7 @@
 
 import re
 import fnmatch
+from pathlib import Path
 
 from sos.utilities import sos_get_command_output
 
@@ -184,17 +185,29 @@ class PackageManager():
         if self._packages is None:
             self._packages = {}
 
-        if self.query_command:
-            cmd = self.query_command
-            pkg_list = self.exec_cmd(cmd, timeout=30, chroot=self.chroot)
+        if self.query_cache_file:
+            if self.query_command:
+                pkg_query_cmd = Path("/etc/sos/.cache/load_all_services.txt")
+                with open(pkg_query_cmd, 'r', encoding='utf-8') as pq:
+                    for pkg in self._parse_pkg_list(pq):
+                        self._packages[pkg[0]] = {
+                            'name': pkg[0],
+                            'version': pkg[1].split('.'),
+                            'release': pkg[2],
+                            'pkg_manager': self.manager_name
+                        }
+        else:
+            if self.query_command:
+                cmd = self.query_command
+                pkg_list = self.exec_cmd(cmd, timeout=30, chroot=self.chroot)
 
-            for pkg in self._parse_pkg_list(pkg_list):
-                self._packages[pkg[0]] = {
-                    'name': pkg[0],
-                    'version': pkg[1].split('.'),
-                    'release': pkg[2],
-                    'pkg_manager': self.manager_name
-                }
+                for pkg in self._parse_pkg_list(pkg_list):
+                    self._packages[pkg[0]] = {
+                        'name': pkg[0],
+                        'version': pkg[1].split('.'),
+                        'release': pkg[2],
+                        'pkg_manager': self.manager_name
+                    }
 
     def pkg_version(self, pkg):
         """Returns the entry in self.packages for pkg if it exists
