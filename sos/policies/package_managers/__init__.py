@@ -53,6 +53,7 @@ class PackageManager():
     query_path_command = None
     chroot = None
     files = None
+    query_cache_file = ''
 
     def __init__(self, chroot=None, remote_exec=None):
         self._packages = None
