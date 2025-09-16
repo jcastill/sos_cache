@@ -64,8 +64,8 @@ class SystemdInit(InitSystem):
                     pass
             list_cmd_file.parent.mkdir(exist_ok=True, parents=True)
             with open(list_cmd_file,
-                      'w', encoding='utf-8') as file:
-                file.write(svcs)
+                      'w', encoding='utf-8') as file:                
+                file.writelines(f"{svc\n}" for svc in svcs)
 
     def is_running(self, name, default=False):
         try:
