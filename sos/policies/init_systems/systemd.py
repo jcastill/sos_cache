@@ -9,7 +9,7 @@
 # See the LICENSE file in the source distribution for further information.
 
 from sos.policies.init_systems import InitSystem
-from sos.utilities import shell_out
+from sos.utilities import shell_out, monitor_execution_time
 
 from pathlib import Path
 
@@ -32,6 +32,7 @@ class SystemdInit(InitSystem):
                 return line.split()[1]
         return 'unknown'
 
+    @monitor_execution_time
     def load_all_services(self):
         try:
             list_cmd_file = Path("/etc/sos/.cache/load_all_services.txt")
