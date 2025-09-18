@@ -15,7 +15,7 @@ from sos.presets import (NO_PRESET, GENERIC_PRESETS, PRESETS_PATH,
                          PresetDefaults, DESC, NOTE, OPTS)
 from sos.policies.package_managers import PackageManager
 from sos.utilities import (ImporterHelper, import_module, get_human_readable,
-                           bold)
+                           bold, monitor_execution_time)
 from sos.report.plugins import IndependentPlugin, ExperimentalPlugin
 from sos.options import SoSOptions
 from sos import _sos as _
@@ -334,6 +334,7 @@ any third party.
         """
         return self.package_manager.pkg_by_name(pkg)
 
+    @monitor_execution_time
     def _parse_uname(self):
         (system, node, release,
          version, machine, _) = platform.uname()
