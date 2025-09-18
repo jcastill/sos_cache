@@ -24,6 +24,8 @@ import mmap
 from contextlib import closing
 from collections import deque
 
+from functools import wraps
+
 try:
     from packaging.version import parse as parse_version
 except ImportError:
@@ -74,7 +76,21 @@ __all__ = [
     'sos_get_command_output',
     'tac_logs',
     'tail',
+    'monitor_execution_time'
 ]
+
+
+def monitor_execution_time(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        import time
+
+        start = time.perf_counter()
+        func(*args, **kwargs)
+        end = time.perf_counter()
+        print(f"Elapsed time for function {func.__name__}:"
+              f" {end - start:.6f} seconds")
+    return wrapper
 
 
 def format_version_to_pep440(ver):
