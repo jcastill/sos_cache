@@ -12,7 +12,7 @@ import re
 import fnmatch
 from pathlib import Path
 
-from sos.utilities import sos_get_command_output
+from sos.utilities import sos_get_command_output, monitor_execution_time
 
 
 class PackageManager():
@@ -173,6 +173,7 @@ class PackageManager():
         """
         raise NotImplementedError
 
+    @monitor_execution_time
     def _generate_pkg_list(self):
         """Generates a dictionary of packages for internal use by the package
         manager in the format::
