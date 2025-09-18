@@ -9,7 +9,7 @@
 # See the LICENSE file in the source distribution for further information.
 
 import re
-from sos.utilities import sos_get_command_output
+from sos.utilities import sos_get_command_output, monitor_execution_time
 
 
 class InitSystem():
@@ -114,6 +114,7 @@ class InitSystem():
         """
         raise NotImplementedError
 
+    @monitor_execution_time
     def _query_service(self, name):
         """Query an individual service"""
         if self.query_cmd:
