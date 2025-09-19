@@ -83,8 +83,6 @@ __all__ = [
 def monitor_execution_time(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        import time
-
         start = time.perf_counter()
         func(*args, **kwargs)
         end = time.perf_counter()
