@@ -187,12 +187,11 @@ class PackageManager():
         if self._packages is None:
             self._packages = {}
 
-        pkg_query_cmd = Path("/etc/sos/.cache/list_all_rpm_packages.txt")
-        if self.query_cache_file:
+        pkg_query_cmd_file = Path("/etc/sos/.cache/list_all_rpm_packages.txt")
+        if pkg_query_cmd_file.is_file():
             if self.query_command:
-
-                with open(pkg_query_cmd, 'r', encoding='utf-8') as pq:
-                    for pkg in self._parse_pkg_list(pq):
+                with open(pkg_query_cmd_file, 'r', encoding='utf-8') as pq:
+                    for pkg in self._parse_pkg_list(str(pq)):
                         self._packages[pkg[0]] = {
                             'name': pkg[0],
                             'version': pkg[1].split('.'),
@@ -211,10 +210,10 @@ class PackageManager():
                         'release': pkg[2],
                         'pkg_manager': self.manager_name
                     }
-            pkg_query_cmd.parent.mkdir(exist_ok=True, parents=True)
-            with open(pkg_query_cmd,
+            pkg_query_cmd_file.parent.mkdir(exist_ok=True, parents=True)
+            with open(pkg_query_cmd_file,
                       'w', encoding='utf-8') as file:
-                file.writelines(f"{pkg}\n" for pkg in pkg_list)
+                file.writelines(self._packages)
 
     def pkg_version(self, pkg):
         """Returns the entry in self.packages for pkg if it exists
