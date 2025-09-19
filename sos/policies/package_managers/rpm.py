@@ -20,7 +20,7 @@ class RpmPackageManager(PackageManager):
     files_command = 'rpm -qal'
     verify_command = 'rpm -V'
     verify_filter = ["debuginfo", "-devel"]
-    query_cache_file = ''
+    query_cache_file = 'rpm_-qa'
 
     def _parse_pkg_list(self, pkg_list):
         for pkg in pkg_list.splitlines():
