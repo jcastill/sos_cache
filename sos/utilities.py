@@ -84,10 +84,11 @@ def monitor_execution_time(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         start = time.perf_counter()
-        func(*args, **kwargs)
+        result = func(*args, **kwargs)
         end = time.perf_counter()
         print(f"Elapsed time for function {func.__name__}:"
               f" {end - start:.6f} seconds")
+        return result
     return wrapper
 
 
